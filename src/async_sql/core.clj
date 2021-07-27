@@ -1,10 +1,7 @@
-(ns pg.core
+(ns async-sql.core
   (:import
     (io.vertx.core
-      Future
-      Vertx)
-    (io.vertx.pgclient
-      PgPool)
+      Future)
     (io.vertx.sqlclient
       Pool
       PoolOptions
@@ -22,13 +19,6 @@
   [{:keys [max-size]}]
   (cond-> (PoolOptions.)
     max-size (.setMaxSize max-size)))
-
-
-(defn ^Pool create
-  [^Vertx vertx options]
-  (PgPool/pool ^Vertx vertx
-               ^String (:jdbc-url options)
-               (map->pool-options options)))
 
 
 (defn close
