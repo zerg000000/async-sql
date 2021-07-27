@@ -1,6 +1,6 @@
 {:paths ["src"]
- :deps {com.github.seancorfield/next.jdbc {:mvn/version "1.2.674"}
-        io.vertx/vertx-pg-client {:mvn/version "4.1.2"}}
+ :deps {io.vertx/vertx-sql-client {:mvn/version "4.1.2"}}
  :aliases
  {:test {:extra-deps {lambdaisland/kaocha {:mvn/version "1.0.861"}
+                      io.vertx/vertx-pg-client {:mvn/version "4.1.2"}
                       clj-test-containers/clj-test-containers {:mvn/version "0.4.0"}}}}}
