@@ -1,0 +1,8 @@
+# IDE
+.lsp/
+.calva/
+.idea/
+*.iml
+
+# Clojure
+.cpcache/
