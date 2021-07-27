@@ -16,9 +16,19 @@
 
 
 (defn ^PoolOptions map->pool-options
-  [{:keys [max-size]}]
+  [{:keys [max-size max-wait-queue-size
+           idle-timeout-unit idle-timeout
+           pool-cleaner-period
+           connection-timeout-unit connection-timeout]}]
+
   (cond-> (PoolOptions.)
-    max-size (.setMaxSize max-size)))
+    max-size (.setMaxSize max-size)
+    max-wait-queue-size (.setMaxWaitQueueSize max-wait-queue-size)
+    idle-timeout-unit (.setConnectionTimeoutUnit idle-timeout-unit)
+    idle-timeout (.setIdleTimeout idle-timeout)
+    pool-cleaner-period (.setPoolCleanerPeriod pool-cleaner-period)
+    connection-timeout-unit (.setConnectionTimeoutUnit connection-timeout-unit)
+    connection-timeout (.setConnectionTimeout connection-timeout)))
 
 
 (defn close
