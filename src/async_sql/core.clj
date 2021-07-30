@@ -44,7 +44,8 @@
 
 (defn rowset->seq
   [^RowSet rowset]
-  (iterator-seq (.iterator rowset)))
+  (when rowset
+    (iterator-seq (.iterator rowset))))
 
 
 (defn as-unqualifed-maps
