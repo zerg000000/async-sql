@@ -14,6 +14,25 @@
     (java.util.function
       Function)))
 
+(defprotocol ReadableColumn
+  (read-column-by-label [val label]
+    "Function for transforming values after reading them via a column label.")
+  (read-column-by-index [val rsmeta idx]
+    "Function for transforming values after reading them via a column index."))
+
+(extend-protocol ReadableColumn
+  Object
+  (read-column-by-label [x _] x)
+  (read-column-by-index [x _2 _3] x)
+
+  Boolean
+  (read-column-by-label [x _] (if (= true x) true false))
+  (read-column-by-index [x _2 _3] (if (= true x) true false))
+
+  nil
+  (read-column-by-label [_1 _2] nil)
+  (read-column-by-index [_1 _2 _3] nil))
+
 
 (defn ^PoolOptions map->pool-options
   [{:keys [max-size max-wait-queue-size
@@ -50,12 +69,16 @@
 
 (defn as-unqualifed-maps
   [^Row row]
-  (let [m (transient {})]
-    (doseq [^int i (range (.size row))]
-      (assoc! m
-              (keyword (.getColumnName row i))
-              (.getValue row i)))
-    (persistent! m)))
+  (loop [i (.size row)
+         m (transient {})]
+    (if (nat-int? i)
+      (recur
+       (dec i)
+       (assoc! m
+               (keyword (.getColumnName row i))
+               (read-column-by-index (.getValue row i) row i)))
+      (-> (dissoc! m nil)
+          (persistent!)))))
 
 
 (defn ^Future execute!*
